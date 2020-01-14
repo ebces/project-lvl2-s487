@@ -1,8 +1,8 @@
 import gendiff from '../src';
 
 test('gendiff', () => {
-  expect(gendiff(__dirname.concat('/before.json'),
-    __dirname.concat('/after.json'))).toEqual({
+  expect(gendiff(__dirname.concat('/__fixtures__/before.json'),
+    __dirname.concat('/__fixtures__/after.json'))).toEqual({
     ' host': 'hexlet.io',
     '-timeout': 50,
     '+timeout': 20,
