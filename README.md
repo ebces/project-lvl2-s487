@@ -5,4 +5,4 @@
 
 ## Запуск
 
-**gendiff** pathToFileOne pathToFileTwo
+    **gendiff** pathToFileOne pathToFileTwo
