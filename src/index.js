@@ -1,11 +1,23 @@
 import _ from 'lodash';
+import { ymlParser, jsonParser } from './parsers';
 
+
+const path = require('path');
 const fs = require('fs');
 
+const typeOfFile = (pathToFile) => {
+  switch (path.extname(pathToFile)) {
+    case '.json':
+      return jsonParser;
+    default:
+      return ymlParser;
+  }
+};
 
 const gendiff = (firstConfig, secondConfig) => {
-  const first = JSON.parse(fs.readFileSync(firstConfig, (err, data) => data));
-  const second = JSON.parse(fs.readFileSync(secondConfig, (err, data) => data));
+  const parser = typeOfFile(firstConfig);
+  const first = parser(fs.readFileSync(firstConfig, 'utf-8'));
+  const second = parser(fs.readFileSync(secondConfig, 'utf-8'));
 
   const keysFirstObject = Object.keys(first);
   const keysSecondObject = Object.keys(second);
