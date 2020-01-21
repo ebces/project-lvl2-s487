@@ -21,7 +21,7 @@ const gendiff = (firstConfig, secondConfig) => {
     const minusName = `-${elem}`;
 
     if (_.has(first, elem) && _.has(second, elem)) {
-      return _.isEqual(first[elem], second[elem]) // first[elem] === second[elem]
+      return _.isEqual(first[elem], second[elem])
         ? { ...acc, [newName]: first[elem] }
         : { ...acc, [minusName]: first[elem], [plusName]: second[elem] };
     }

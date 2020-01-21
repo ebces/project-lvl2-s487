@@ -10,4 +10,11 @@ test('gendiff', () => {
     '-follow': false,
     '+verbose': true,
   });
+  expect(gendiff(__dirname.concat('/__fixtures__/afterYML.yml'),
+    __dirname.concat('/__fixtures__/beforeYML.yml'))).toEqual({
+    ' language': 'node_js',
+    '+node_js': ['node'],
+    '-script': ['make lint', 'make test'],
+    '+script': ['make lint', 'make test', 'make start'],
+  });
 });
