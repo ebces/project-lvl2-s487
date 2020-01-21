@@ -9,5 +9,4 @@
 ***
 
 ## YAML
-
-    [![asciicast](https://asciinema.org/a/a0SLawfwmjBCpEo3mzPGb1zrg.svg)](https://asciinema.org/a/a0SLawfwmjBCpEo3mzPGb1zrg)
+[![asciicast](https://asciinema.org/a/a0SLawfwmjBCpEo3mzPGb1zrg.svg)](https://asciinema.org/a/a0SLawfwmjBCpEo3mzPGb1zrg)
