@@ -1,5 +1,12 @@
 const yaml = require('js-yaml');
+const path = require('path');
 
 
-export const ymlParser = yaml.safeLoad;
-export const jsonParser = JSON.parse;
+export default (pathToFile) => {
+  switch (path.extname(pathToFile)) {
+    case '.json':
+      return JSON.parse;
+    default:
+      return yaml.safeLoad;
+  }
+};

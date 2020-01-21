@@ -1,21 +1,12 @@
 import _ from 'lodash';
-import { ymlParser, jsonParser } from './parsers';
+import extName from './parsers';
 
 
-const path = require('path');
 const fs = require('fs');
 
-const typeOfFile = (pathToFile) => {
-  switch (path.extname(pathToFile)) {
-    case '.json':
-      return jsonParser;
-    default:
-      return ymlParser;
-  }
-};
 
 const gendiff = (firstConfig, secondConfig) => {
-  const parser = typeOfFile(firstConfig);
+  const parser = extName(firstConfig);
   const first = parser(fs.readFileSync(firstConfig, 'utf-8'));
   const second = parser(fs.readFileSync(secondConfig, 'utf-8'));
 
@@ -30,7 +21,7 @@ const gendiff = (firstConfig, secondConfig) => {
     const minusName = `-${elem}`;
 
     if (_.has(first, elem) && _.has(second, elem)) {
-      return first[elem] === second[elem]
+      return _.isEqual(first[elem], second[elem]) // first[elem] === second[elem]
         ? { ...acc, [newName]: first[elem] }
         : { ...acc, [minusName]: first[elem], [plusName]: second[elem] };
     }
