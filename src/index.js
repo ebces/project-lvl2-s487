@@ -7,34 +7,40 @@ const fs = require('fs');
 
 const gendiff = (firstConfig, secondConfig) => {
   const parser = extName(firstConfig);
-  const first = parser(fs.readFileSync(firstConfig, 'utf-8'));
-  const second = parser(fs.readFileSync(secondConfig, 'utf-8'));
+  const firstFile = parser(fs.readFileSync(firstConfig, 'utf-8'));
+  const secondFile = parser(fs.readFileSync(secondConfig, 'utf-8'));
 
-  const keysFirstObject = Object.keys(first);
-  const keysSecondObject = Object.keys(second);
+  const iter = (firstElem, secondElem) => {
+    const keysFirstObject = Object.keys(firstElem);
+    const keysSecondObject = Object.keys(secondElem);
 
-  const keysOfObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
+    const keysOfObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
+    return keysOfObjects.reduce((acc, elem) => {
+      const newName = ` ${elem}`;
+      const plusName = `+${elem}`;
+      const minusName = `-${elem}`;
 
-  const result = keysOfObjects.reduce((acc, elem) => {
-    const newName = ` ${elem}`;
-    const plusName = `+${elem}`;
-    const minusName = `-${elem}`;
+      if (_.has(firstElem, elem) && _.has(secondElem, elem)) {
+        if (typeof firstElem[elem] === 'object' && typeof secondElem[elem] === 'object') {
+          return { ...acc, [newName]: iter(firstElem[elem], secondElem[elem]) };
+        }
 
-    if (_.has(first, elem) && _.has(second, elem)) {
-      return _.isEqual(first[elem], second[elem])
-        ? { ...acc, [newName]: first[elem] }
-        : { ...acc, [minusName]: first[elem], [plusName]: second[elem] };
-    }
-    if (!_.has(first, elem) && _.has(second, elem)) {
-      return { ...acc, [plusName]: second[elem] };
-    }
-    if (_.has(first, elem) && !_.has(second, elem)) {
-      return { ...acc, [minusName]: first[elem] };
-    }
-    return acc;
-  }, {});
-  console.log(result);
-  return result;
+        return _.isEqual(firstElem[elem], secondElem[elem])
+          ? { ...acc, [newName]: firstElem[elem] }
+          : { ...acc, [minusName]: firstElem[elem], [plusName]: secondElem[elem] };
+      }
+      if (!_.has(firstElem, elem) && _.has(secondElem, elem)) {
+        return { ...acc, [plusName]: secondElem[elem] };
+      }
+      if (_.has(firstElem, elem) && !_.has(secondElem, elem)) {
+        return { ...acc, [minusName]: firstElem[elem] };
+      }
+      return acc;
+    }, {});
+  };
+
+  console.log(iter(firstFile, secondFile));
+  return iter(firstFile, secondFile);
 };
 
 
