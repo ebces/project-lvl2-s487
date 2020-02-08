@@ -1,46 +1,22 @@
-import _ from 'lodash';
+// import _ from 'lodash';
 import extName from './parsers';
-
+import defaultFormat from './formatters/defaultFormat';
+import plainFormat from './formatters/plainFormat';
 
 const fs = require('fs');
 
 
-const gendiff = (firstConfig, secondConfig) => {
+const gendiff = (firstConfig, secondConfig, fileFormat = 'default') => {
   const parser = extName(firstConfig);
   const firstFile = parser(fs.readFileSync(firstConfig, 'utf-8'));
   const secondFile = parser(fs.readFileSync(secondConfig, 'utf-8'));
 
-  const iter = (firstElem, secondElem) => {
-    const keysFirstObject = Object.keys(firstElem);
-    const keysSecondObject = Object.keys(secondElem);
-
-    const keysOfObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
-    return keysOfObjects.reduce((acc, elem) => {
-      const newName = ` ${elem}`;
-      const plusName = `+${elem}`;
-      const minusName = `-${elem}`;
-
-      if (_.has(firstElem, elem) && _.has(secondElem, elem)) {
-        if (typeof firstElem[elem] === 'object' && typeof secondElem[elem] === 'object') {
-          return { ...acc, [newName]: iter(firstElem[elem], secondElem[elem]) };
-        }
-
-        return _.isEqual(firstElem[elem], secondElem[elem])
-          ? { ...acc, [newName]: firstElem[elem] }
-          : { ...acc, [minusName]: firstElem[elem], [plusName]: secondElem[elem] };
-      }
-      if (!_.has(firstElem, elem) && _.has(secondElem, elem)) {
-        return { ...acc, [plusName]: secondElem[elem] };
-      }
-      if (_.has(firstElem, elem) && !_.has(secondElem, elem)) {
-        return { ...acc, [minusName]: firstElem[elem] };
-      }
-      return acc;
-    }, {});
-  };
-
-  console.log(iter(firstFile, secondFile));
-  return iter(firstFile, secondFile);
+  if (fileFormat.format === 'plain') {
+    // console.log(plainFormat(firstFile, secondFile));
+    return plainFormat(firstFile, secondFile);
+  }
+  console.log(defaultFormat(firstFile, secondFile));
+  return defaultFormat(firstFile, secondFile);
 };
 
 
