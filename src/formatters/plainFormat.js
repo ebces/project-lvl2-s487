@@ -4,25 +4,37 @@ import _ from 'lodash';
 const plainFormat = (firstElem, secondElem) => {
   const iter = (fFile, sFile, accPath) => {
     const keysFirstObject = Object.keys(fFile);
-    // console.log(`${keysFirstObject} ключи первого объекта`);
     const keysSecondObject = Object.keys(sFile);
-    // console.log(`${keysSecondObject} ключи второго объекта`);
     const keysOfObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
-    // console.log(`${keysOfObjects} ключи объектов`);
 
     return keysOfObjects.reduce((acc, elem) => {
-      // console.log(elem);
-      // console.log(typeof fFile[elem] === 'object')
-      const newPath = typeof fFile[elem] === 'object' && typeof sFile[elem] === 'object' ? [...accPath, elem] : accPath;
-      if (typeof fFile[elem] !== 'object' && typeof sFile[elem] !== 'object') {
-        // console.log('!!!!')
-        return [...acc, `${newPath.join('.')}${elem}`];
-      }
+      const newPath = typeof fFile[elem] === 'object' && typeof sFile[elem] === 'object' ? [...accPath, `${elem}.`] : accPath;
 
-      return [...acc, ...iter(fFile[elem], sFile[elem], newPath)];
+      // if (typeof fFile[elem] !== 'object' && typeof sFile[elem] !== 'object') {
+      //   return [...acc, `${newPath.join('.')}${elem}`];
+      // }
+      if (_.has(fFile, elem) && !_.has(sFile, elem)) {
+        return [...acc, `Property "${newPath.join(' ')}${elem}" was removed`];
+      }
+      if (!_.has(fFile, elem) && _.has(sFile, elem)) {
+        return typeof sFile[elem] === 'object'
+          ? [...acc, `Property "${newPath.join(' ')}${elem}" was added with value: [complex value]`]
+          : [...acc, `Property "${newPath.join(' ')}${elem}" was added with value: ${sFile[elem]}`];
+      }
+      //
+
+      if (_.has(fFile, elem) && _.has(sFile, elem)) {
+        if (!_.isEqual(fFile[elem], sFile[elem])) {
+          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From ${fFile[elem]} to ${sFile[elem]}`];
+        }
+      }
+      //
+
+
+      return typeof fFile[elem] === 'object' && typeof sFile[elem] === 'object' ? [...acc, ...iter(fFile[elem], sFile[elem], newPath)] : acc;
     }, []);
   };
-  console.log(iter(firstElem, secondElem, []))
+  console.log(iter(firstElem, secondElem, []));
   return iter(firstElem, secondElem, []);
 
 
