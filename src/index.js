@@ -11,8 +11,8 @@ const gendiff = (firstConfig, secondConfig, fileFormat = 'default') => {
   const firstFile = parser(fs.readFileSync(firstConfig, 'utf-8'));
   const secondFile = parser(fs.readFileSync(secondConfig, 'utf-8'));
 
-  if (fileFormat.format === 'plain') {
-    // console.log(plainFormat(firstFile, secondFile));
+  if (fileFormat === 'plain' || fileFormat.format === 'plain') {
+    console.log(plainFormat(firstFile, secondFile));
     return plainFormat(firstFile, secondFile);
   }
   console.log(defaultFormat(firstFile, secondFile));

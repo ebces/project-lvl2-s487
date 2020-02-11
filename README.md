@@ -14,3 +14,5 @@
 [![asciicast](https://asciinema.org/a/LVhVY3l46MtjzrlhgY7TZ5ViD.svg)](https://asciinema.org/a/LVhVY3l46MtjzrlhgY7TZ5ViD)
 ## TREES
 [![asciicast](https://asciinema.org/a/5dMSRN0s50ke1Amz2wMGeeKxk.svg)](https://asciinema.org/a/5dMSRN0s50ke1Amz2wMGeeKxk)
+## PLAIN FORMAT
+[![asciicast](https://asciinema.org/a/SSTcZ3PdYfv5IvrWhRIF7Z7KR.svg)](https://asciinema.org/a/SSTcZ3PdYfv5IvrWhRIF7Z7KR)

@@ -16,24 +16,23 @@ const plainFormat = (firstElem, secondElem) => {
       if (!_.has(fFile, elem) && _.has(sFile, elem)) {
         return typeof sFile[elem] === 'object'
           ? [...acc, `Property "${newPath.join(' ')}${elem}" was added with value: [complex value]`]
-          : [...acc, `Property "${newPath.join(' ')}${elem}" was added with value: ${sFile[elem]}`];
+          : [...acc, `Property "${newPath.join(' ')}${elem}" was added with value: "${sFile[elem]}"`];
       }
       if (_.has(fFile, elem) && _.has(sFile, elem)) {
         if (!_.isEqual(fFile[elem], sFile[elem]) && typeof fFile[elem] !== 'object' && typeof sFile[elem] !== 'object') {
-          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From ${fFile[elem]} to ${sFile[elem]}`];
+          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From "${fFile[elem]}" to "${sFile[elem]}"`];
         }
         if (!_.isEqual(fFile[elem], sFile[elem]) && typeof fFile[elem] !== 'object' && typeof sFile[elem] === 'object') {
-          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From ${fFile[elem]} to [complex value]`];
+          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From "${fFile[elem]}" to [complex value]`];
         }
         if (!_.isEqual(fFile[elem], sFile[elem]) && typeof fFile[elem] === 'object' && typeof sFile[elem] !== 'object') {
-          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From [complex value] to ${sFile[elem]}`];
+          return [...acc, `Property "${newPath.join(' ')}${elem}" was updated. From [complex value] to "${sFile[elem]}"`];
         }
       }
 
       return typeof fFile[elem] === 'object' && typeof sFile[elem] === 'object' ? [...acc, ...iter(fFile[elem], sFile[elem], newPath)] : acc;
     }, []);
   };
-  console.log(iter(firstElem, secondElem, []));
   return iter(firstElem, secondElem, []);
 };
 
