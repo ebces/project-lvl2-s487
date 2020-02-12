@@ -2,6 +2,7 @@
 import extName from './parsers';
 import defaultFormat from './formatters/defaultFormat';
 import plainFormat from './formatters/plainFormat';
+import jsonFormat from './formatters/jsonFormat';
 
 const fs = require('fs');
 
@@ -14,6 +15,10 @@ const gendiff = (firstConfig, secondConfig, fileFormat = 'default') => {
   if (fileFormat === 'plain' || fileFormat.format === 'plain') {
     console.log(plainFormat(firstFile, secondFile));
     return plainFormat(firstFile, secondFile);
+  }
+  if (fileFormat === 'json' || fileFormat.format === 'json') {
+    console.log(jsonFormat(firstFile, secondFile));
+    return jsonFormat(firstFile, secondFile);
   }
   console.log(defaultFormat(firstFile, secondFile));
   return defaultFormat(firstFile, secondFile);
