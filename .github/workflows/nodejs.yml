@@ -10,8 +10,7 @@ jobs:
     steps:
     - name: install
       run: npm install
-    - name: lint
-      run: npx eslint
+
     - name: test
       run: npm test
      
