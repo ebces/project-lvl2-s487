@@ -33,7 +33,7 @@ const plainFormat = (firstElem, secondElem) => {
       return typeof fFile[elem] === 'object' && typeof sFile[elem] === 'object' ? [...acc, ...iter(fFile[elem], sFile[elem], newPath)] : acc;
     }, []);
   };
-  return iter(firstElem, secondElem, []);
+  return iter(firstElem, secondElem, []).join('\n');
 };
 
 export default plainFormat;
