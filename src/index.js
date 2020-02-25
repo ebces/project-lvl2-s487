@@ -1,10 +1,8 @@
-// import _ from 'lodash';
+import fs from 'fs';
 import extName from './parsers';
 import defaultFormat from './formatters/defaultFormat';
 import plainFormat from './formatters/plainFormat';
 import jsonFormat from './formatters/jsonFormat';
-
-const fs = require('fs');
 
 
 const gendiff = (firstConfig, secondConfig, fileFormat = 'default') => {

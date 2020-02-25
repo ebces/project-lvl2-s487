@@ -1,35 +1,37 @@
+import fs from 'fs';
 import gendiff from '../src';
 
-const fs = require('fs');
 
-const getFile = (path) => fs.readFileSync(`${__dirname}${path}`, 'utf-8');
+const getFileContent = (path) => fs.readFileSync(`${__dirname}${path}`, 'utf-8');
+
+const resultTree = getFileContent('/__fixtures__/resultTree');
+const resultString = getFileContent('/__fixtures__/resultString');
+const resultJSON = getFileContent('/__fixtures__/resultJSON');
+const resultYmlJSON = getFileContent('/__fixtures__/resultYML');
+
+const gendiffTestJSON = gendiff(`${__dirname}/__fixtures__/treeBefore.json`, `${__dirname}/__fixtures__/treeAfter.json`);
+const gendiffTestYML = gendiff(`${__dirname}/__fixtures__/treeBefore.yml`, `${__dirname}/__fixtures__/treeAfter.yml`);
+const gendiffTestINI = gendiff(`${__dirname}/__fixtures__/treeBefore.ini`, `${__dirname}/__fixtures__/treeAfter.ini`);
+
+const gendiffTestPlainJSON = gendiff(`${__dirname}/__fixtures__/treeBefore.json`, `${__dirname}/__fixtures__/treeAfter.json`, 'plain');
+const gendiffTestPlainYML = gendiff(`${__dirname}/__fixtures__/treeBefore.yml`, `${__dirname}/__fixtures__/treeAfter.yml`, 'plain');
+const gendiffTestPlainINI = gendiff(`${__dirname}/__fixtures__/treeBefore.ini`, `${__dirname}/__fixtures__/treeAfter.ini`, 'plain');
+
+const gendiffTestJsonJSON = gendiff(`${__dirname}/__fixtures__/treeBefore.json`, `${__dirname}/__fixtures__/treeAfter.json`, 'json');
+const gendiffTestJsonYML = gendiff(`${__dirname}/__fixtures__/treeBefore.yml`, `${__dirname}/__fixtures__/treeAfter.yml`, 'json');
+const gendiffTestJsonINI = gendiff(`${__dirname}/__fixtures__/treeBefore.ini`, `${__dirname}/__fixtures__/treeAfter.ini`, 'json');
+
 
 test('gendiff', () => {
-  expect(gendiff(__dirname.concat('/__fixtures__/before.json'),
-    __dirname.concat('/__fixtures__/after.json'))).toEqual(getFile('/__fixtures__/result'));
-  expect(gendiff(__dirname.concat('/__fixtures__/before.yml'),
-    __dirname.concat('/__fixtures__/after.yml'))).toEqual(getFile('/__fixtures__/result'));
-  expect(gendiff(__dirname.concat('/__fixtures__/before.ini'),
-    __dirname.concat('/__fixtures__/after.ini'))).toEqual(getFile('/__fixtures__/result'));
+  expect(gendiffTestJSON).toEqual(resultTree);
+  expect(gendiffTestYML).toEqual(resultTree);
+  expect(gendiffTestINI).toEqual(resultTree);
 
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.json'),
-    __dirname.concat('/__fixtures__/treeAfter.json'))).toEqual(getFile('/__fixtures__/resultTree'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.yml'),
-    __dirname.concat('/__fixtures__/treeAfter.yml'))).toEqual(getFile('/__fixtures__/resultTree'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.ini'),
-    __dirname.concat('/__fixtures__/treeAfter.ini'))).toEqual(getFile('/__fixtures__/resultTree'));
+  expect(gendiffTestPlainJSON).toEqual(resultString);
+  expect(gendiffTestPlainYML).toEqual(resultString);
+  expect(gendiffTestPlainINI).toEqual(resultString);
 
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.json'),
-    __dirname.concat('/__fixtures__/treeAfter.json'), 'plain')).toEqual(getFile('/__fixtures__/resultString'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.yml'),
-    __dirname.concat('/__fixtures__/treeAfter.yml'), 'plain')).toEqual(getFile('/__fixtures__/resultString'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.ini'),
-    __dirname.concat('/__fixtures__/treeAfter.ini'), 'plain')).toEqual(getFile('/__fixtures__/resultString'));
-
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.json'),
-    __dirname.concat('/__fixtures__/treeAfter.json'), 'json')).toEqual(getFile('/__fixtures__/resultJSON'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.yml'),
-    __dirname.concat('/__fixtures__/treeAfter.yml'), 'json')).toEqual(getFile('/__fixtures__/resultYML'));
-  expect(gendiff(__dirname.concat('/__fixtures__/treeBefore.ini'),
-    __dirname.concat('/__fixtures__/treeAfter.ini'), 'json')).toEqual(getFile('/__fixtures__/resultJSON'));
+  expect(gendiffTestJsonJSON).toEqual(resultJSON);
+  expect(gendiffTestJsonYML).toEqual(resultYmlJSON);
+  expect(gendiffTestJsonINI).toEqual(resultJSON);
 });
