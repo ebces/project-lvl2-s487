@@ -4,7 +4,7 @@ node_js:
 env:
   global:
     - CC_TEST_REPORTER_ID=808ff2f7958b8297c3c1c39c0899f18d037dee6ef2457b8e5a772$
-  before_script:
+before_script:
    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-late$
    - chmod +x ./cc-test-reporter
    - ./cc-test-reporter before-build
