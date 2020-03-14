@@ -1,25 +1,30 @@
 import fs from 'fs';
-import extName from './parsers';
-import defaultFormat from './formatters/defaultFormat';
+import path from 'path';
+import parser from './parsers';
+import treeFormat from './formatters/defaultFormat';
 import plainFormat from './formatters/plainFormat';
 import jsonFormat from './formatters/jsonFormat';
 
 
-const gendiff = (firstConfig, secondConfig, fileFormat = 'default') => {
-  const parser = extName(firstConfig);
-  const firstFile = parser(fs.readFileSync(firstConfig, 'utf-8'));
-  const secondFile = parser(fs.readFileSync(secondConfig, 'utf-8'));
+const gendiff = (firstConfig, secondConfig, outputFormat = 'default') => {
+  const fileFormat = path.extname(firstConfig);
 
-  if (fileFormat === 'plain' || fileFormat.format === 'plain') {
-    console.log(plainFormat(firstFile, secondFile));
-    return plainFormat(firstFile, secondFile);
+  const firstFileContent = fs.readFileSync(firstConfig, 'utf-8');
+  const secondFileContent = fs.readFileSync(secondConfig, 'utf-8');
+
+  const firstParsedFile = parser(firstFileContent, fileFormat);
+  const secondParsedFile = parser(secondFileContent, fileFormat);
+
+  if (outputFormat === 'plain' || outputFormat.format === 'plain') {
+    console.log(plainFormat(firstParsedFile, secondParsedFile));
+    return plainFormat(firstParsedFile, secondParsedFile);
   }
-  if (fileFormat === 'json' || fileFormat.format === 'json') {
-    console.log(jsonFormat(firstFile, secondFile));
-    return jsonFormat(firstFile, secondFile);
+  if (outputFormat === 'json' || outputFormat.format === 'json') {
+    console.log(jsonFormat(firstParsedFile, secondParsedFile));
+    return jsonFormat(firstParsedFile, secondParsedFile);
   }
-  console.log(defaultFormat(firstFile, secondFile));
-  return defaultFormat(firstFile, secondFile);
+  console.log(treeFormat(firstParsedFile, secondParsedFile));
+  return treeFormat(firstParsedFile, secondParsedFile);
 };
 
 

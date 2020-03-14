@@ -1,15 +1,13 @@
-const yaml = require('js-yaml');
-const path = require('path');
-const ini = require('ini');
+import yaml from 'js-yaml';
+import ini from 'ini';
 
-
-export default (pathToFile) => {
-  switch (path.extname(pathToFile)) {
+export default (fileContent, fileFormat) => {
+  switch (fileFormat) {
     case '.json':
-      return JSON.parse;
+      return JSON.parse(fileContent);
     case '.ini':
-      return ini.parse;
+      return ini.parse(fileContent);
     default:
-      return yaml.safeLoad;
+      return yaml.safeLoad(fileContent);
   }
 };

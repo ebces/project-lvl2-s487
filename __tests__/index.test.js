@@ -7,21 +7,16 @@ const getFixturePath = (fileName) => path.join(__dirname, '__fixtures__', fileNa
 const getFileContent = (fileName) => fs.readFileSync(getFixturePath(fileName), 'utf-8');
 
 
-test('gendiff', () => {
-  const resultTree = getFileContent('resultTree');
-  const resultString = getFileContent('resultString');
-  const resultJSON = getFileContent('resultJSON');
-  const resultYmlJSON = getFileContent('resultYML');
-
-  expect(gendiff(getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'))).toEqual(resultTree);
-  expect(gendiff(getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'))).toEqual(resultTree);
-  expect(gendiff(getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'))).toEqual(resultTree);
-
-  expect(gendiff(getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'plain')).toEqual(resultString);
-  expect(gendiff(getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'plain')).toEqual(resultString);
-  expect(gendiff(getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'plain')).toEqual(resultString);
-
-  expect(gendiff(getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'json')).toEqual(resultJSON);
-  expect(gendiff(getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'json')).toEqual(resultYmlJSON);
-  expect(gendiff(getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'json')).toEqual(resultJSON);
+test.each([
+  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), '', getFileContent('resultTree')],
+  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), '', getFileContent('resultTree')],
+  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), '', getFileContent('resultTree')],
+  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'plain', getFileContent('resultString')],
+  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'plain', getFileContent('resultString')],
+  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'plain', getFileContent('resultString')],
+  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'json', getFileContent('resultJSON')],
+  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'json', getFileContent('resultYML')],
+  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'json', getFileContent('resultJSON')],
+])('gendiff', (firstPath, secondPath, format, expected) => {
+  expect(gendiff(firstPath, secondPath, format)).toEqual(expected);
 });
