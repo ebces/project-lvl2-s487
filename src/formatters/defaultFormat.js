@@ -1,21 +1,23 @@
 import _ from 'lodash';
 
-const render = (data) => {
+export const render = (data, spaces = '  ') => {
+  const newSpaces = `${spaces}###`;
   const res = data.reduce((acc, elem) => {
-if(elem.newType === 'object' && elem.oldType === 'object') {
-  return `${acc}  ${treeFormat()}`
-}
-//console.log(elem.oldType)
+    //console.log(elem)
+     if (elem.newType === 'object' && elem.oldType === 'object') {
+       return `${acc}${newSpaces}${elem.name}: ${newSpaces}${render(elem.children, newSpaces)}\n`;
+     }
+     
     if (elem.newType === 'undefined') {
-      return `${acc}  - ${elem.name}:${elem.oldValue}\n`;
+      return `${acc}${spaces}- ${elem.name}: ${elem.oldValue}\n`;
     }
     if (elem.oldType === 'undefined') {
-      return `${acc}  + ${elem.name}:${elem.newValue}\n`;
+      return `${acc}${spaces}+ ${elem.name}: ${elem.newValue}\n`;
     }
     if (elem.oldValue === elem.newValue) {
-      return `${acc}    ${elem.name}:${elem.newValue}\n`;
+      return `${acc}${spaces}/ ${elem.name}: ${elem.newValue}\n`;
     }
-    return `${acc}  - ${elem.name}:${elem.oldValue}\n  + ${elem.name}:${elem.newValue}\n`;
+    return `${acc}${spaces}- ${elem.name}: ${elem.oldValue}\n${spaces}+ ${elem.name}: ${elem.newValue}\n`;
   }, '');
   return `{\n${res}}`;
 };
@@ -26,14 +28,36 @@ const treeFormat = (firstFile, secondFile) => {
 
   const keysOfObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
 
-  const tree = keysOfObjects.reduce((acc, elem) => [...acc, {
-    name: elem,
-    oldType: typeof firstFile[elem],
-    newType: typeof secondFile[elem],
-    oldValue: firstFile[elem],
-    newValue: secondFile[elem],
-  }], []);
-  return render(tree);
+  const tree = keysOfObjects.reduce((acc, elem) => {
+    //if (typeof firstFile[elem] === 'object' && typeof secondFile[elem] === 'object') {
+    if (typeof firstFile[elem] !== 'object' && typeof secondFile[elem] !== 'object') {
+      return [...acc, {
+           name: elem,
+           oldType: typeof firstFile[elem],
+           newType: typeof secondFile[elem],
+           oldValue: firstFile[elem],
+           newValue: secondFile[elem],
+         }];
+    }
+    
+    return [...acc, {
+        name: elem,
+        oldType: typeof firstFile[elem],
+        newType: typeof secondFile[elem],
+        oldValue: firstFile[elem],
+        newValue: secondFile[elem],
+        children: treeFormat(firstFile[elem], secondFile[elem]),
+      }];
+    //}
+    // return [...acc, {
+    //   name: elem,
+    //   oldType: typeof firstFile[elem],
+    //   newType: typeof secondFile[elem],
+    //   oldValue: firstFile[elem],
+    //   newValue: secondFile[elem],
+    // }];
+  }, []);
+  return tree;
 };
 
 

@@ -1,9 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import parser from './parsers';
-import treeFormat from './formatters/defaultFormat';
+import { render } from './formatters/defaultFormat';
 import plainFormat from './formatters/plainFormat';
 import jsonFormat from './formatters/jsonFormat';
+import treeFormat from './formatters/defaultFormat';
 
 
 const gendiff = (firstConfig, secondConfig, outputFormat = 'default') => {
@@ -23,7 +24,7 @@ const gendiff = (firstConfig, secondConfig, outputFormat = 'default') => {
     console.log(jsonFormat(firstParsedFile, secondParsedFile));
     return jsonFormat(firstParsedFile, secondParsedFile);
   }
-  console.log(treeFormat(firstParsedFile, secondParsedFile));
+  console.log(render(treeFormat(firstParsedFile, secondParsedFile)));
   return treeFormat(firstParsedFile, secondParsedFile);
 };
 
