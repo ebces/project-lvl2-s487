@@ -16,7 +16,7 @@ test.each([
   [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'plain', getFileContent('resultString')],
   [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'json', getFileContent('resultJSON')],
   [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'json', getFileContent('resultYML')],
-  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'json', getFileContent('resultJSON')],
+  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'json', getFileContent('resultINI')],
 ])('gendiff', (firstPath, secondPath, format, expected) => {
   expect(gendiff(firstPath, secondPath, format)).toEqual(expected);
 });

@@ -1,11 +1,10 @@
 import fs from 'fs';
 import path from 'path';
 import parser from './parsers';
-import { render } from './formatters/defaultFormat';
-import plainFormat from './formatters/plainFormat';
-import jsonFormat from './formatters/jsonFormat';
-import treeFormat from './formatters/defaultFormat';
-
+import makeAST from './AST';
+import renderTree from './formatters/treeFormat';
+import renderPlain from './formatters/plainFormat';
+import renderJson from './formatters/jsonFormat';
 
 const gendiff = (firstConfig, secondConfig, outputFormat = 'default') => {
   const fileFormat = path.extname(firstConfig);
@@ -16,16 +15,18 @@ const gendiff = (firstConfig, secondConfig, outputFormat = 'default') => {
   const firstParsedFile = parser(firstFileContent, fileFormat);
   const secondParsedFile = parser(secondFileContent, fileFormat);
 
+  const AST = makeAST(firstParsedFile, secondParsedFile);
+
   if (outputFormat === 'plain' || outputFormat.format === 'plain') {
-    console.log(plainFormat(firstParsedFile, secondParsedFile));
-    return plainFormat(firstParsedFile, secondParsedFile);
+    console.log(renderPlain(AST));
+    return renderPlain(AST);
   }
   if (outputFormat === 'json' || outputFormat.format === 'json') {
-    console.log(jsonFormat(firstParsedFile, secondParsedFile));
-    return jsonFormat(firstParsedFile, secondParsedFile);
+    console.log(renderJson(AST));
+    return renderJson(AST);
   }
-  console.log(render(treeFormat(firstParsedFile, secondParsedFile)));
-  return treeFormat(firstParsedFile, secondParsedFile);
+  console.log(renderTree(AST));
+  return renderTree(AST);
 };
 
 
