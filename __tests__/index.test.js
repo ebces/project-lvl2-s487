@@ -6,17 +6,19 @@ import gendiff from '../src';
 const getFixturePath = (fileName) => path.join(__dirname, '__fixtures__', fileName);
 const getFileContent = (fileName) => fs.readFileSync(getFixturePath(fileName), 'utf-8');
 
-
 test.each([
-  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), '', getFileContent('resultTree')],
-  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), '', getFileContent('resultTree')],
-  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), '', getFileContent('resultTree')],
-  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'plain', getFileContent('resultString')],
-  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'plain', getFileContent('resultString')],
-  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'plain', getFileContent('resultString')],
-  [getFixturePath('treeBefore.json'), getFixturePath('treeAfter.json'), 'json', getFileContent('resultJSON')],
-  [getFixturePath('treeBefore.yml'), getFixturePath('treeAfter.yml'), 'json', getFileContent('resultYML')],
-  [getFixturePath('treeBefore.ini'), getFixturePath('treeAfter.ini'), 'json', getFileContent('resultINI')],
+  ['treeBefore.json', 'treeAfter.json', '', 'resultTree'],
+  ['treeBefore.yml', 'treeAfter.yml', '', 'resultTree'],
+  ['treeBefore.ini', 'treeAfter.ini', '', 'resultTree'],
+  ['treeBefore.json', 'treeAfter.json', 'plain', 'resultString'],
+  ['treeBefore.yml', 'treeAfter.yml', 'plain', 'resultString'],
+  ['treeBefore.ini', 'treeAfter.ini', 'plain', 'resultString'],
+  ['treeBefore.json', 'treeAfter.json', 'json', 'resultJSON'],
+  ['treeBefore.yml', 'treeAfter.yml', 'json', 'resultYML'],
+  ['treeBefore.ini', 'treeAfter.ini', 'json', 'resultINI'],
 ])('gendiff', (firstPath, secondPath, format, expected) => {
-  expect(gendiff(firstPath, secondPath, format)).toEqual(expected);
+  const pathToFirstFile = getFixturePath(firstPath);
+  const pathToSecondFile = getFixturePath(secondPath);
+  const result = getFileContent(expected);
+  expect(gendiff(pathToFirstFile, pathToSecondFile, format)).toEqual(result);
 });

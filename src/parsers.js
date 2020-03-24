@@ -7,7 +7,9 @@ export default (fileContent, fileFormat) => {
       return JSON.parse(fileContent);
     case '.ini':
       return ini.parse(fileContent);
-    default:
+    case '.yml':
       return yaml.safeLoad(fileContent);
+    default:
+      return 'Error';
   }
 };
