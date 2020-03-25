@@ -10,25 +10,29 @@ const objectToString = (object, spaces = '') => {
   }, '');
 };
 
+
 const render = (data, spaces = '') => {
   const twoSpace = `${spaces}  `;
   const fourSpaces = `${spaces}    `;
   const result = data.reduce((acc, elem) => {
-    if (elem.newType === 'object' && elem.oldType === 'object') {
+    if (elem.children) {
       return `${acc}${twoSpace}  ${elem.name}: ${render(elem.children, fourSpaces)}\n`;
     }
-    const oldStr = elem.oldType === 'object' ? `{\n${objectToString(elem.oldValue, fourSpaces)}${fourSpaces}}` : elem.oldValue;
-    const newstr = elem.newType === 'object' ? `{\n${objectToString(elem.newValue, fourSpaces)}${fourSpaces}}` : elem.newValue;
-    if (elem.newType === 'undefined') {
+
+    const oldStr = typeof elem.firstValue === 'object' ? `{\n${objectToString(elem.firstValue, fourSpaces)}${fourSpaces}}` : elem.firstValue;
+    const newStr = typeof elem.secondValue === 'object' ? `{\n${objectToString(elem.secondValue, fourSpaces)}${fourSpaces}}` : elem.secondValue;
+
+    if (elem.status === 'added') {
+      return `${acc}${twoSpace}+ ${elem.name}: ${newStr}\n`;
+    }
+    if (elem.status === 'deleted') {
       return `${acc}${twoSpace}- ${elem.name}: ${oldStr}\n`;
     }
-    if (elem.oldType === 'undefined') {
-      return `${acc}${twoSpace}+ ${elem.name}: ${newstr}\n`;
+    if (elem.status === 'changed') {
+      return `${acc}${twoSpace}- ${elem.name}: ${oldStr}\n${twoSpace}+ ${elem.name}: ${newStr}\n`;
     }
-    if (elem.oldValue === elem.newValue) {
-      return `${acc}${twoSpace}  ${elem.name}: ${newstr}\n`;
-    }
-    return `${acc}${twoSpace}- ${elem.name}: ${oldStr}\n${twoSpace}+ ${elem.name}: ${newstr}\n`;
+
+    return `${acc}${twoSpace}  ${elem.name}: ${oldStr}\n`;
   }, '');
   return `{\n${result}${spaces}}`;
 };

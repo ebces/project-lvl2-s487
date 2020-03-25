@@ -1,14 +1,14 @@
 import yaml from 'js-yaml';
 import ini from 'ini';
 
-export default (fileContent, fileFormat) => {
-  switch (fileFormat) {
+export default (data, dataType) => {
+  switch (dataType) {
     case '.json':
-      return JSON.parse(fileContent);
+      return JSON.parse(data);
     case '.ini':
-      return ini.parse(fileContent);
+      return ini.parse(data);
     case '.yml':
-      return yaml.safeLoad(fileContent);
+      return yaml.safeLoad(data);
     default:
       return 'Error';
   }

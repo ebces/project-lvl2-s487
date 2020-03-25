@@ -1,29 +1,26 @@
-import _ from 'lodash';
-
-
 const render = (data) => {
   const iter = (items, path) => items.reduce((acc, elem) => {
     const partsOfPath = [...path, elem.name];
     const newPath = partsOfPath.join('.');
 
-    if (elem.newType === 'object' && elem.oldType === 'object') {
+    if (elem.children) {
       return `${acc}${iter(elem.children, partsOfPath)}`;
     }
-    if (elem.newType === 'undefined') {
+    if (elem.status === 'deleted') {
       return `${acc}Property "${newPath}" was removed\n`;
     }
-    if (elem.oldType === 'undefined') {
-      return elem.newType === 'object' ? `${acc}Property "${newPath}" was added with value: [complex value]\n`
-        : `${acc}Property "${newPath}" was added with value: "${elem.newValue}"\n`;
+    if (elem.status === 'added') {
+      return typeof elem.secondValue === 'object' ? `${acc}Property "${newPath}" was added with value: [complex value]\n`
+        : `${acc}Property "${newPath}" was added with value: "${elem.secondValue}"\n`;
     }
-    if (!_.isEqual(elem.oldValue, elem.newValue)) {
-      if (elem.oldType === 'object') {
-        return `${acc}Property "${newPath}" was updated. From [complex value] to "${elem.newValue}"\n`;
+    if (elem.status === 'changed') {
+      if (typeof elem.firstValue === 'object') {
+        return `${acc}Property "${newPath}" was updated. From [complex value] to "${elem.secondValue}"\n`;
       }
-      if (elem.newType === 'object') {
-        return `${acc}Property "${newPath}" was updated. From "${elem.oldValue}" to [complex value]\n`;
+      if (typeof elem.secondValue === 'object') {
+        return `${acc}Property "${newPath}" was updated. From "${elem.firstValue}" to [complex value]\n`;
       }
-      return `${acc}Property "${newPath}" was updated. From "${elem.oldValue}" to "${elem.newValue}"\n`;
+      return `${acc}Property "${newPath}" was updated. From "${elem.firstValue}" to "${elem.secondValue}"\n`;
     }
     return acc;
   }, '');
