@@ -1,8 +1,8 @@
 const objectToString = (object, spaces = '') => {
   const twoSpaces = `${spaces}    `;
   const values = Object.entries(object);
-  return values.reduce((acc, elem) => {
-    const [key, value] = elem;
+  return values.reduce((acc, node) => {
+    const [key, value] = node;
     if (typeof value !== 'object') {
       return `${acc}${twoSpaces}${key}: ${value}\n`;
     }
@@ -14,25 +14,25 @@ const objectToString = (object, spaces = '') => {
 const render = (data, spaces = '') => {
   const twoSpace = `${spaces}  `;
   const fourSpaces = `${spaces}    `;
-  const result = data.reduce((acc, elem) => {
-    if (elem.children) {
-      return `${acc}${twoSpace}  ${elem.name}: ${render(elem.children, fourSpaces)}\n`;
+  const result = data.reduce((acc, node) => {
+    if (node.children) {
+      return `${acc}${twoSpace}  ${node.name}: ${render(node.children, fourSpaces)}\n`;
     }
 
-    const oldStr = typeof elem.firstValue === 'object' ? `{\n${objectToString(elem.firstValue, fourSpaces)}${fourSpaces}}` : elem.firstValue;
-    const newStr = typeof elem.secondValue === 'object' ? `{\n${objectToString(elem.secondValue, fourSpaces)}${fourSpaces}}` : elem.secondValue;
+    const oldString = typeof node.firstValue === 'object' ? `{\n${objectToString(node.firstValue, fourSpaces)}${fourSpaces}}` : node.firstValue;
+    const newString = typeof node.secondValue === 'object' ? `{\n${objectToString(node.secondValue, fourSpaces)}${fourSpaces}}` : node.secondValue;
 
-    if (elem.status === 'added') {
-      return `${acc}${twoSpace}+ ${elem.name}: ${newStr}\n`;
+    if (node.status === 'added') {
+      return `${acc}${twoSpace}+ ${node.name}: ${newString}\n`;
     }
-    if (elem.status === 'deleted') {
-      return `${acc}${twoSpace}- ${elem.name}: ${oldStr}\n`;
+    if (node.status === 'deleted') {
+      return `${acc}${twoSpace}- ${node.name}: ${oldString}\n`;
     }
-    if (elem.status === 'changed') {
-      return `${acc}${twoSpace}- ${elem.name}: ${oldStr}\n${twoSpace}+ ${elem.name}: ${newStr}\n`;
+    if (node.status === 'changed') {
+      return `${acc}${twoSpace}- ${node.name}: ${oldString}\n${twoSpace}+ ${node.name}: ${newString}\n`;
     }
 
-    return `${acc}${twoSpace}  ${elem.name}: ${oldStr}\n`;
+    return `${acc}${twoSpace}  ${node.name}: ${oldString}\n`;
   }, '');
   return `{\n${result}${spaces}}`;
 };

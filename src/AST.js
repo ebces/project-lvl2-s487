@@ -1,50 +1,50 @@
 import _ from 'lodash';
 
 
-const makeAST = (firstFile, secondFile) => {
-  const keysFirstObject = Object.keys(firstFile);
-  const keysSecondObject = Object.keys(secondFile);
-  const keysOfTwoObjects = keysFirstObject.concat(keysSecondObject);
+const makeAST = (firstData, secondData) => {
+  const keysFirstData = Object.keys(firstData);
+  const keysSecondData = Object.keys(secondData);
+  const keysOfTwoObjects = keysFirstData.concat(keysSecondData);
   const uniqueKeysOfTwoObjects = _.uniq(keysOfTwoObjects);
 
   const tree = uniqueKeysOfTwoObjects.map((key) => {
-    if (_.isEqual(firstFile[key], secondFile[key])) {
+    if (_.isEqual(firstData[key], secondData[key])) {
       return {
         name: key,
         status: 'unchanged',
-        firstValue: firstFile[key],
-        secondValue: secondFile[key],
+        firstValue: firstData[key],
+        secondValue: secondData[key],
       };
     }
 
-    if (_.has(firstFile, key) && !_.has(secondFile, key)) {
+    if (!_.has(secondData, key)) {
       return {
         name: key,
         status: 'deleted',
-        firstValue: firstFile[key],
+        firstValue: firstData[key],
       };
     }
 
-    if (!_.has(firstFile, key) && _.has(secondFile, key)) {
+    if (!_.has(firstData, key)) {
       return {
         name: key,
         status: 'added',
-        secondValue: secondFile[key],
+        secondValue: secondData[key],
       };
     }
 
-    if (typeof firstFile[key] === 'object' && typeof secondFile[key] === 'object') {
+    if (typeof firstData[key] === 'object' && typeof secondData[key] === 'object') {
       return {
         name: key,
-        children: makeAST(firstFile[key], secondFile[key]),
+        children: makeAST(firstData[key], secondData[key]),
       };
     }
 
     return {
       name: key,
       status: 'changed',
-      firstValue: firstFile[key],
-      secondValue: secondFile[key],
+      firstValue: firstData[key],
+      secondValue: secondData[key],
     };
   });
   return tree;
