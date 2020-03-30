@@ -3,13 +3,13 @@ import ini from 'ini';
 
 export default (data, dataType) => {
   switch (dataType) {
-    case '.json':
+    case 'json':
       return JSON.parse(data);
-    case '.ini':
+    case 'ini':
       return ini.parse(data);
-    case '.yml':
+    case 'yml':
       return yaml.safeLoad(data);
     default:
-      return 'Error';
+      throw new Error(`Invalid dataType: ${dataType}`);
   }
 };

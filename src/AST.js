@@ -4,49 +4,47 @@ import _ from 'lodash';
 const makeAST = (firstFile, secondFile) => {
   const keysFirstObject = Object.keys(firstFile);
   const keysSecondObject = Object.keys(secondFile);
+  const keysOfTwoObjects = keysFirstObject.concat(keysSecondObject);
+  const uniqueKeysOfTwoObjects = _.uniq(keysOfTwoObjects);
 
-  const uniqueKeysOfTwoObjects = _.uniq(keysFirstObject.concat(keysSecondObject));
-
-  const tree = uniqueKeysOfTwoObjects.map((elem) => {
-    if (_.has(firstFile, elem) && _.has(secondFile, elem)) {
-      if (typeof firstFile[elem] === 'object' && typeof secondFile[elem] === 'object') {
-        return {
-          name: elem,
-          children: makeAST(firstFile[elem], secondFile[elem]),
-        };
-      }
-    }
-    if (_.has(firstFile, elem) && !_.has(secondFile, elem)) {
+  const tree = uniqueKeysOfTwoObjects.map((key) => {
+    if (_.isEqual(firstFile[key], secondFile[key])) {
       return {
-        name: elem,
-        status: 'deleted',
-        firstValue: firstFile[elem],
-      };
-    }
-
-    if (!_.has(firstFile, elem) && _.has(secondFile, elem)) {
-      return {
-        name: elem,
-        status: 'added',
-        secondValue: secondFile[elem],
-      };
-    }
-
-
-    if (_.isEqual(firstFile[elem], secondFile[elem])) {
-      return {
-        name: elem,
+        name: key,
         status: 'unchanged',
-        firstValue: firstFile[elem],
-        secondValue: secondFile[elem],
+        firstValue: firstFile[key],
+        secondValue: secondFile[key],
+      };
+    }
+
+    if (_.has(firstFile, key) && !_.has(secondFile, key)) {
+      return {
+        name: key,
+        status: 'deleted',
+        firstValue: firstFile[key],
+      };
+    }
+
+    if (!_.has(firstFile, key) && _.has(secondFile, key)) {
+      return {
+        name: key,
+        status: 'added',
+        secondValue: secondFile[key],
+      };
+    }
+
+    if (typeof firstFile[key] === 'object' && typeof secondFile[key] === 'object') {
+      return {
+        name: key,
+        children: makeAST(firstFile[key], secondFile[key]),
       };
     }
 
     return {
-      name: elem,
+      name: key,
       status: 'changed',
-      firstValue: firstFile[elem],
-      secondValue: secondFile[elem],
+      firstValue: firstFile[key],
+      secondValue: secondFile[key],
     };
   });
   return tree;
