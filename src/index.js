@@ -15,11 +15,9 @@ const gendiff = (pathToFirstFile, pathToSecondFile, outputFormat) => {
 
   const AST = makeAST(firstParsedData, secondParsedData);
 
-  const formatter = chooseFormatter(outputFormat);
+  const formatData = chooseFormatter(outputFormat);
 
-  console.log(formatter(AST));
-  return formatter(AST);
+  return formatData(AST);
 };
-
 
 export default gendiff;

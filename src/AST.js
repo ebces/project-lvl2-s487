@@ -36,6 +36,7 @@ const makeAST = (firstData, secondData) => {
     if (typeof firstData[key] === 'object' && typeof secondData[key] === 'object') {
       return {
         name: key,
+        status: 'hasChildren',
         children: makeAST(firstData[key], secondData[key]),
       };
     }

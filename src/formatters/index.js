@@ -1,6 +1,5 @@
 import renderTree from './treeFormat';
 import renderPlain from './plainFormat';
-import renderJson from './jsonFormat';
 
 
 const chooseFormatter = (format) => {
@@ -8,7 +7,7 @@ const chooseFormatter = (format) => {
     case 'plain':
       return renderPlain;
     case 'json':
-      return renderJson;
+      return JSON.stringify;
     default:
       return renderTree;
   }
