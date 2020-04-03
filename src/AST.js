@@ -2,10 +2,9 @@ import _ from 'lodash';
 
 
 const makeAST = (firstData, secondData) => {
-  const keysFirstData = Object.keys(firstData);
-  const keysSecondData = Object.keys(secondData);
-  const keysOfTwoObjects = keysFirstData.concat(keysSecondData);
-  const uniqueKeysOfTwoObjects = _.uniq(keysOfTwoObjects);
+  const keysFirstData = _.keys(firstData);
+  const keysSecondData = _.keys(secondData);
+  const uniqueKeysOfTwoObjects = _.union(keysFirstData, keysSecondData);
 
   const tree = uniqueKeysOfTwoObjects.map((key) => {
     if (_.isEqual(firstData[key], secondData[key])) {
