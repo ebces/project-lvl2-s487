@@ -8,8 +8,10 @@ const chooseFormatter = (format) => {
       return renderPlain;
     case 'json':
       return JSON.stringify;
-    default:
+    case 'treeFormat':
       return renderTree;
+    default:
+      throw new Error(`Invalid format: ${format}`);
   }
 };
 

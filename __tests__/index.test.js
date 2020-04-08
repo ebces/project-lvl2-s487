@@ -7,9 +7,9 @@ const getFixturePath = (fileName) => path.join(__dirname, '__fixtures__', fileNa
 const getFileContent = (fileName) => fs.readFileSync(getFixturePath(fileName), 'utf-8');
 
 test.each([
-  ['treeBefore.json', 'treeAfter.json', '', 'resultTree'],
-  ['treeBefore.yml', 'treeAfter.yml', '', 'resultTree'],
-  ['treeBefore.ini', 'treeAfter.ini', '', 'resultTree'],
+  ['treeBefore.json', 'treeAfter.json', 'treeFormat', 'resultTree'],
+  ['treeBefore.yml', 'treeAfter.yml', 'treeFormat', 'resultTree'],
+  ['treeBefore.ini', 'treeAfter.ini', 'treeFormat', 'resultTree'],
   ['treeBefore.json', 'treeAfter.json', 'plain', 'resultString'],
   ['treeBefore.yml', 'treeAfter.yml', 'plain', 'resultString'],
   ['treeBefore.ini', 'treeAfter.ini', 'plain', 'resultString'],

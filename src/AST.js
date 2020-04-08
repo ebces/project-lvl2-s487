@@ -7,15 +7,6 @@ const makeAST = (firstData, secondData) => {
   const uniqueKeysOfTwoObjects = _.union(keysFirstData, keysSecondData);
 
   const tree = uniqueKeysOfTwoObjects.map((key) => {
-    if (_.isEqual(firstData[key], secondData[key])) {
-      return {
-        name: key,
-        status: 'unchanged',
-        firstValue: firstData[key],
-        secondValue: secondData[key],
-      };
-    }
-
     if (!_.has(secondData, key)) {
       return {
         name: key,
@@ -28,6 +19,15 @@ const makeAST = (firstData, secondData) => {
       return {
         name: key,
         status: 'added',
+        secondValue: secondData[key],
+      };
+    }
+
+    if (_.isEqual(firstData[key], secondData[key])) {
+      return {
+        name: key,
+        status: 'unchanged',
+        firstValue: firstData[key],
         secondValue: secondData[key],
       };
     }

@@ -1,12 +1,11 @@
 #!/usr/bin/env node
 
+import program from 'commander';
 import gendiff from '..';
 
-const program = require('commander');
-
-program.description('Compares two configuration files and shows a difference.');
-program.arguments('<firstConfig> <secondConfig>');
-program.version('0.0.1');
-program.option('-f, --format [type]', 'Output format');
-program.action((path1, path2, cmdObj) => gendiff(path1, path2, cmdObj.format));
-program.parse(process.argv);
+program.description('Compares two configuration files and shows a difference.')
+  .arguments('<firstConfig> <secondConfig>')
+  .version('0.0.1')
+  .option('-f, --format [type]', 'Output format', 'treeFormat')
+  .action((path1, path2) => gendiff(path1, path2, program.format))
+  .parse(process.argv);
