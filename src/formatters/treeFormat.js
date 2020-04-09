@@ -11,25 +11,23 @@ const objectToString = (object, spaces = '') => {
   return partsOfString.join('\n');
 };
 
+const buildString = (node, spaces) => (typeof node === 'object' ? `{\n${objectToString(node, spaces)}\n${spaces}}` : node);
 
 const render = (data, spaces = '') => {
   const twoSpace = `${spaces}  `;
   const fourSpaces = `${spaces}    `;
   const result = data.map((node) => {
-    const oldString = typeof node.firstValue === 'object' ? `{\n${objectToString(node.firstValue, fourSpaces)}\n${fourSpaces}}` : node.firstValue;
-    const newString = typeof node.secondValue === 'object' ? `{\n${objectToString(node.secondValue, fourSpaces)}\n${fourSpaces}}` : node.secondValue;
-
     switch (node.status) {
       case 'hasChildren':
         return `${twoSpace}  ${node.name}: ${render(node.children, fourSpaces)}`;
       case 'added':
-        return `${twoSpace}+ ${node.name}: ${newString}`;
+        return `${twoSpace}+ ${node.name}: ${buildString(node.secondValue, fourSpaces)}`;
       case 'deleted':
-        return `${twoSpace}- ${node.name}: ${oldString}`;
+        return `${twoSpace}- ${node.name}: ${buildString(node.firstValue, fourSpaces)}`;
       case 'changed':
-        return `${twoSpace}- ${node.name}: ${oldString}\n${twoSpace}+ ${node.name}: ${newString}`;
+        return `${twoSpace}- ${node.name}: ${buildString(node.firstValue, fourSpaces)}\n${twoSpace}+ ${node.name}: ${buildString(node.secondValue, fourSpaces)}`;
       case 'unchanged':
-        return `${twoSpace}  ${node.name}: ${oldString}`;
+        return `${twoSpace}  ${node.name}: ${buildString(node.firstValue, fourSpaces)}`;
       default:
         throw new Error(`Invalid dataType: ${node.status}`);
     }
