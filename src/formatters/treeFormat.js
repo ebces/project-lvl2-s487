@@ -1,38 +1,40 @@
 const objectToString = (object, spaces = '') => {
   const twoSpaces = `${spaces}    `;
   const values = Object.entries(object);
-  const partOfString = values.reduce((acc, node) => {
+  const partsOfString = values.map((node) => {
     const [key, value] = node;
     if (typeof value !== 'object') {
-      return [...acc, `${twoSpaces}${key}: ${value}\n`];
+      return `${twoSpaces}${key}: ${value}`;
     }
-    return [...acc, `${twoSpaces}${key}: {\n${objectToString(value, twoSpaces)}${twoSpaces}}\n`];
+    return `${twoSpaces}${key}: {\n${objectToString(value, twoSpaces)}${twoSpaces}}`;
   }, []);
-  return partOfString.join('');
+  return partsOfString.join('\n');
 };
 
 
 const render = (data, spaces = '') => {
   const twoSpace = `${spaces}  `;
   const fourSpaces = `${spaces}    `;
-  const result = data.reduce((acc, node) => {
-    const oldString = typeof node.firstValue === 'object' ? `{\n${objectToString(node.firstValue, fourSpaces)}${fourSpaces}}` : node.firstValue;
-    const newString = typeof node.secondValue === 'object' ? `{\n${objectToString(node.secondValue, fourSpaces)}${fourSpaces}}` : node.secondValue;
+  const result = data.map((node) => {
+    const oldString = typeof node.firstValue === 'object' ? `{\n${objectToString(node.firstValue, fourSpaces)}\n${fourSpaces}}` : node.firstValue;
+    const newString = typeof node.secondValue === 'object' ? `{\n${objectToString(node.secondValue, fourSpaces)}\n${fourSpaces}}` : node.secondValue;
 
     switch (node.status) {
       case 'hasChildren':
-        return [...acc, `${twoSpace}  ${node.name}: ${render(node.children, fourSpaces)}\n`];
+        return `${twoSpace}  ${node.name}: ${render(node.children, fourSpaces)}`;
       case 'added':
-        return [...acc, `${twoSpace}+ ${node.name}: ${newString}\n`];
+        return `${twoSpace}+ ${node.name}: ${newString}`;
       case 'deleted':
-        return [...acc, `${twoSpace}- ${node.name}: ${oldString}\n`];
+        return `${twoSpace}- ${node.name}: ${oldString}`;
       case 'changed':
-        return [...acc, `${twoSpace}- ${node.name}: ${oldString}\n${twoSpace}+ ${node.name}: ${newString}\n`];
+        return `${twoSpace}- ${node.name}: ${oldString}\n${twoSpace}+ ${node.name}: ${newString}`;
+      case 'unchanged':
+        return `${twoSpace}  ${node.name}: ${oldString}`;
       default:
-        return [...acc, `${twoSpace}  ${node.name}: ${oldString}\n`];
+        throw new Error(`Invalid dataType: ${node.status}`);
     }
-  }, []);
-  return `{\n${result.join('')}${spaces}}`;
+  });
+  return `{\n${result.join('\n')}\n${spaces}}`;
 };
 
 export default render;
