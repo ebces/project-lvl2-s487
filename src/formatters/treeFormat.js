@@ -29,7 +29,7 @@ const render = (data, spaces = '') => {
       case 'unchanged':
         return `${twoSpace}  ${node.name}: ${buildString(node.firstValue, fourSpaces)}`;
       default:
-        throw new Error(`Invalid dataType: ${node.status}`);
+        throw new Error(`Invalid status: ${node.status}`);
     }
   });
   return `{\n${result.join('\n')}\n${spaces}}`;

@@ -31,7 +31,7 @@ const render = (data) => {
           case 'changed':
             return chooseString(node.status)(newPath, node.firstValue, node.secondValue);
           default:
-            throw new Error(`Invalid dataType: ${node.status}`);
+            throw new Error(`Invalid status: ${node.status}`);
         }
       });
     return result.join('\n');
