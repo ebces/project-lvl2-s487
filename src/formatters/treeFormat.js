@@ -8,7 +8,7 @@ const objectToString = (object, nestingLevel = 1) => {
   const values = Object.entries(object);
   const partsOfString = values.map((node) => {
     const [key, value] = node;
-    if (typeof value !== 'object') {
+    if (!isObject(value)) {
       return `${indentBeforeName}${key}: ${value}`;
     }
     return `${indentBeforeName}${key}: ${objectToString(value, nestingLevel + 1)}`;
