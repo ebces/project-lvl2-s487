@@ -1,19 +1,6 @@
-const fileStatusStrings = {
-  deleted: (path) => `Property "${path}" was removed`,
-  added: (path, secondValue) => (typeof secondValue === 'object' ? `Property "${path}" was added with value: [complex value]`
-    : `Property "${path}" was added with value: "${secondValue}"`),
-  changed: (path, firstValue, secondValue) => {
-    if (typeof firstValue === 'object') {
-      return `Property "${path}" was updated. From [complex value] to "${secondValue}"`;
-    }
-    if (typeof secondValue === 'object') {
-      return `Property "${path}" was updated. From "${firstValue}" to [complex value]`;
-    }
-    return `Property "${path}" was updated. From "${firstValue}" to "${secondValue}"`;
-  },
-};
+import { isObject } from 'lodash';
 
-const chooseString = (status) => fileStatusStrings[status];
+const dataToString = (data) => (isObject(data) ? '[complex value]' : `"${data}"`);
 
 const render = (data) => {
   const iter = (items, path) => {
@@ -25,11 +12,11 @@ const render = (data) => {
           case 'hasChildren':
             return `${iter(node.children, partsOfPath)}`;
           case 'deleted':
-            return chooseString(node.status)(newPath);
+            return `Property "${newPath}" was removed`;
           case 'added':
-            return chooseString(node.status)(newPath, node.secondValue);
+            return `Property "${newPath}" was added with value: ${dataToString(node.secondValue)}`;
           case 'changed':
-            return chooseString(node.status)(newPath, node.firstValue, node.secondValue);
+            return `Property "${newPath}" was updated. From ${dataToString(node.firstValue)} to ${dataToString(node.secondValue)}`;
           default:
             throw new Error(`Invalid status: ${node.status}`);
         }

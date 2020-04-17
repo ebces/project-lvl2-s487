@@ -26,7 +26,7 @@ const makeAST = (firstData, secondData) => {
       return makeNode(key, 'unchanged', firstData[key], secondData[key]);
     }
 
-    if (typeof firstData[key] === 'object' && typeof secondData[key] === 'object') {
+    if (_.isObject(firstData[key]) && _.isObject(secondData[key])) {
       return makeNode(key, 'hasChildren', null, null, makeAST(firstData[key], secondData[key]));
     }
 
